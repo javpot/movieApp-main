@@ -11,6 +11,7 @@
   let url = "https://api.themoviedb.org/3/movie/popular";
   let urlTV = "https://api.themoviedb.org/3/trending/tv/day";
   export let id;
+  let searchText;
 
   let h1 = "Movies";
   const options = {
@@ -39,6 +40,7 @@
           title: element.title,
           poster_path: image,
           year: year,
+          media_type: element.media_type,
         };
       });
       console.log(movies);
@@ -56,10 +58,45 @@
         title: element.name,
         poster_path: image,
         year: year,
+        media_type: element.media_type,
       };
     });
     console.log("hello tv");
     console.log(movies);
+  };
+
+  const fetchMovieSearch = async () => {
+    const response = await axios.get(
+      `https://api.themoviedb.org/3/search/multi?query=${searchText}`,
+      options
+    );
+    movies = response.data.results.map((element) => {
+      if (element.media_type == "tv") {
+        const fullYear = new Date(element.first_air_date);
+        const year = fullYear.getFullYear();
+        const image = `https://image.tmdb.org/t/p/w500${element.poster_path}`;
+
+        return {
+          id: element.id,
+          title: element.name,
+          poster_path: image,
+          year: year,
+          media_type: element.media_type,
+        };
+      } else {
+        const fullYear = new Date(element.release_date);
+        const year = fullYear.getFullYear();
+        const image = `https://image.tmdb.org/t/p/w500${element.poster_path}`;
+
+        return {
+          id: element.id,
+          title: element.title,
+          poster_path: image,
+          year: year,
+          media_type: element.media_type,
+        };
+      }
+    });
   };
 
   const menuOptionClicked = (/** @type {string} */ text) => {
@@ -87,10 +124,25 @@
   });
 
   // Je dois export ce id dans une autre page qui a pour but d'afficher les informations du film selectionner
-  const movieData = (movieId) => {
+  const movieData = (type, movieId) => {
+    if (type == undefined) {
+      if (h1 == "Movies") {
+        type = "movie";
+      } else {
+        type = "tv";
+      }
+    }
     id = movieId;
-    console.log(id);
-    window.location.href = `/movieDescription/${id}`;
+    console.log(id, type);
+  };
+
+  const searchInputListener = (event) => {
+    if (searchText == "") {
+      fetchDataMovies();
+    } else {
+      console.log(searchText);
+      fetchMovieSearch();
+    }
   };
 </script>
 
@@ -112,7 +164,13 @@
       </ul>
     </div>
     <div class="right-nav">
-      <input class="inputSearch" type="text" placeholder="Search" />
+      <input
+        class="inputSearch"
+        type="text"
+        placeholder="Search"
+        bind:value={searchText}
+        on:input={(event) => searchInputListener(event)}
+      />
     </div>
   </nav>
   <header>
@@ -122,15 +180,20 @@
   </header>
   <div class="movies-container">
     {#each movies as movie1, i (movie1.id)}
-      <div class="movie-card" on:click={() => movieData(movie1.id)}>
-        <div class="movie-image">
-          <a href="">
-            <img class="movie-image" src={movie1.poster_path} alt="" /></a
-          >
+      {#if movie1.poster_path != "https://image.tmdb.org/t/p/w500undefined" && movie1.poster_path != "https://image.tmdb.org/t/p/w500null" && movie1.media_type != "person"}
+        <div
+          class="movie-card"
+          on:click={() => movieData(movie1.media_type, movie1.id)}
+        >
+          <div class="movie-image">
+            <a href="">
+              <img class="movie-image" src={movie1.poster_path} alt="" /></a
+            >
+          </div>
+          <div class="movie-title">{movie1.title}</div>
+          <div class="movie-year">{movie1.year}</div>
         </div>
-        <div class="movie-title">{movie1.title}</div>
-        <div class="movie-year">{movie1.year}</div>
-      </div>
+      {/if}
     {/each}
   </div>
 </body>
