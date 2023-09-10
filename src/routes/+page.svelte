@@ -7,10 +7,10 @@
   import { goto } from "$app/navigation";
 
   let apiKey = "901a150c5bae0aa0b00c0056c6d09665";
-  let genresList = ["Movies", "TV shows", "Genres", "Top 250"];
+  let genresList = ["Movies", "TV shows", "Top 250"];
   let url = "https://api.themoviedb.org/3/movie/popular";
   let urlTV = "https://api.themoviedb.org/3/trending/tv/day";
-  export let id;
+
   let searchText;
 
   let h1 = "Movies";
@@ -125,15 +125,22 @@
 
   // Je dois export ce id dans une autre page qui a pour but d'afficher les informations du film selectionner
   const movieData = (type, movieId) => {
+    // Car quand la page mount le api call ne renvoi pas le type du film afficher. Il le renvoi seulement avec la requete de search
     if (type == undefined) {
-      if (h1 == "Movies") {
+      if (h1 == "Movies" || h1 == "Top 250") {
         type = "movie";
+        window.location.href = `/description/movie/${movieId}`;
       } else {
         type = "tv";
+        window.location.href = `/description/show/${movieId}`;
+      }
+    } else {
+      if (type == "tv") {
+        window.location.href = `/description/show/${movieId}`;
+      } else {
+        window.location.href = `/description/movie/${movieId}`;
       }
     }
-    id = movieId;
-    console.log(id, type);
   };
 
   const searchInputListener = (event) => {
