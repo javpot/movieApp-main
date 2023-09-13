@@ -10,6 +10,7 @@
   let genresList = ["Movies", "TV shows", "Top 250"];
   let url = "https://api.themoviedb.org/3/movie/popular";
   let urlTV = "https://api.themoviedb.org/3/trending/tv/day";
+  let isMenuOpen = false;
 
   let searchText;
 
@@ -119,6 +120,10 @@
         break;
     }
   };
+
+  function toggleMenu() {
+    isMenuOpen = !isMenuOpen;
+  }
   onMount(() => {
     fetchDataMovies("Movies");
   });
@@ -178,6 +183,9 @@
         bind:value={searchText}
         on:input={(event) => searchInputListener(event)}
       />
+      <button class="menu-button" on:click={toggleMenu}
+        ><img src="./src/img/icons8-menu-50.png" alt="" /></button
+      >
     </div>
   </nav>
   <header>
@@ -299,10 +307,36 @@
     width: 13rem;
     color: white;
   }
+  /* Responsive screen */
+  .menu-button {
+    display: none; /* Hide the menu button by default */
+  }
 
-  @media only screen and (max-width: 350px) {
-    body {
-      background-color: lightblue;
+  @media only screen and (max-width: 670px) {
+    .menu-button {
+      display: block;
+      border: none;
+      appearance: none;
+      background-color: transparent;
+      /* Hide the menu button by default */
+    }
+
+    .inputSearch {
+      display: none;
+    }
+    .left-navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+
+    ul {
+      display: flex;
+      flex-direction: column;
+    }
+    h2 {
+      margin-left: 25px;
     }
   }
 </style>
