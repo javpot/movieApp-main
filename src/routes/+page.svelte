@@ -254,7 +254,7 @@
   body {
     background-color: #282828;
 
-    width: 100%;
+    width: 100vw;
     height: 100%;
   }
   .li-mobile {
@@ -263,7 +263,7 @@
   nav {
     display: flex;
     background-color: rgba(15, 15, 15, 0.9);
-    width: 100%;
+    width: 100vw;
     height: 70px;
     align-items: center;
     justify-content: space-between;
@@ -363,7 +363,7 @@
       display: unset;
       border: none;
       appearance: none;
-
+      background-color: transparent;
       width: 20px;
       margin-left: 8px;
     }
