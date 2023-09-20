@@ -196,7 +196,7 @@
       <button class="menu-button" on:click={toggleMenu}
         ><img
           class="button-option"
-          src="./src/img/icons8-menu-50.png"
+          src="./src/img/icons8-utilisateur-40.png"
           alt=""
         /></button
       >
@@ -363,7 +363,7 @@
       display: unset;
       border: none;
       appearance: none;
-      background-color: transparent;
+
       width: 20px;
       margin-left: 8px;
     }
