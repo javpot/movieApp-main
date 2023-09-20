@@ -11,8 +11,10 @@
   let url = "https://api.themoviedb.org/3/movie/popular";
   let urlTV = "https://api.themoviedb.org/3/trending/tv/day";
   let isMenuOpen = false;
+  let visibility = "hidden";
 
   let searchText;
+  let margin = "-10vh";
 
   let h1 = "Movies";
   const options = {
@@ -123,7 +125,15 @@
 
   function toggleMenu() {
     isMenuOpen = !isMenuOpen;
+    if (isMenuOpen == true) {
+      visibility = "visible";
+      margin = "1em";
+    } else {
+      visibility = "hidden";
+      margin = "-10vh";
+    }
   }
+
   onMount(() => {
     fetchDataMovies("Movies");
   });
@@ -165,7 +175,7 @@
         <h2>Movizzz</h2>
       </div>
 
-      <ul>
+      <ul class="liste-genre">
         {#each genresList as genre}
           <a
             class="menu-option"
@@ -184,32 +194,52 @@
         on:input={(event) => searchInputListener(event)}
       />
       <button class="menu-button" on:click={toggleMenu}
-        ><img src="./src/img/icons8-menu-50.png" alt="" /></button
+        ><img
+          class="button-option"
+          src="./src/img/icons8-menu-50.png"
+          alt=""
+        /></button
       >
     </div>
   </nav>
-  <header>
-    <hr style="color: gray; width: 65vh;" />
-    <h1>{h1}</h1>
-    <hr style="color: gray; width: 65vh;" />
-  </header>
-  <div class="movies-container">
-    {#each movies as movie1, i (movie1.id)}
-      {#if movie1.poster_path != "https://image.tmdb.org/t/p/w500undefined" && movie1.poster_path != "https://image.tmdb.org/t/p/w500null" && movie1.media_type != "person"}
-        <div
-          class="movie-card"
-          on:click={() => movieData(movie1.media_type, movie1.id)}
+  <div style="visibility: {visibility};" class="container-genre-mobile">
+    <ul>
+      {#each genresList as genre}
+        <a
+          class="menu-option-mobile"
+          href=""
+          on:click={() => menuOptionClicked(genre)}
+          ><li style="visibility: {visibility};" class="li-mobile">
+            {genre}
+          </li></a
         >
-          <div class="movie-image">
-            <a href="">
-              <img class="movie-image" src={movie1.poster_path} alt="" /></a
-            >
+      {/each}
+    </ul>
+  </div>
+  <div class="main-container" style="margin-top: {margin};">
+    <header>
+      <hr />
+      <h1>{h1}</h1>
+      <hr />
+    </header>
+    <div class="movies-container">
+      {#each movies as movie1, i (movie1.id)}
+        {#if movie1.poster_path != "https://image.tmdb.org/t/p/w500undefined" && movie1.poster_path != "https://image.tmdb.org/t/p/w500null" && movie1.media_type != "person"}
+          <div
+            class="movie-card"
+            on:click={() => movieData(movie1.media_type, movie1.id)}
+          >
+            <div class="movie-image">
+              <a href="">
+                <img class="movie-image" src={movie1.poster_path} alt="" /></a
+              >
+            </div>
+            <div class="movie-title">{movie1.title}</div>
+            <div class="movie-year">{movie1.year}</div>
           </div>
-          <div class="movie-title">{movie1.title}</div>
-          <div class="movie-year">{movie1.year}</div>
-        </div>
-      {/if}
-    {/each}
+        {/if}
+      {/each}
+    </div>
   </div>
 </body>
 
@@ -227,6 +257,9 @@
     width: 100%;
     height: 100%;
   }
+  .li-mobile {
+    visibility: hidden;
+  }
   nav {
     display: flex;
     background-color: rgba(15, 15, 15, 0.9);
@@ -234,6 +267,18 @@
     height: 70px;
     align-items: center;
     justify-content: space-between;
+  }
+  .container-genre-mobile {
+    display: none;
+
+    background-color: rgba(15, 15, 15, 0.9);
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+  hr {
+    color: gray;
+    width: 65vh;
   }
   .left-navbar {
     display: flex;
@@ -243,19 +288,18 @@
   h2 {
     color: #ffd700;
   }
-  ul {
+  .liste-genre {
     display: flex;
     justify-content: space-around;
     align-items: center;
     width: 50%;
     color: white;
   }
-  .menu-option {
-    text-decoration: none;
-    list-style: none;
-  }
+
   .menu-option {
     color: inherit;
+    text-decoration: none;
+    list-style: none;
     text-decoration: underline 0.15em rgba(255, 255, 255, 0);
     transition: text-decoration-color 300ms;
   }
@@ -263,6 +307,8 @@
     text-decoration-color: white;
   }
   .right-nav {
+    display: flex;
+    justify-content: space-between;
     margin-right: 40px;
   }
   header {
@@ -273,7 +319,7 @@
     color: #ffd700;
   }
   .movies-container {
-    margin-top: 30px;
+    margin-top: 2em;
     border: 1px transparent solid;
     height: fit-content;
     display: flex;
@@ -309,20 +355,22 @@
   }
   /* Responsive screen */
   .menu-button {
-    display: none; /* Hide the menu button by default */
+    display: none;
   }
 
   @media only screen and (max-width: 670px) {
     .menu-button {
-      display: block;
+      display: unset;
       border: none;
       appearance: none;
       background-color: transparent;
-      /* Hide the menu button by default */
+      width: 20px;
+      margin-left: 8px;
     }
 
     .inputSearch {
-      display: none;
+      width: 12em;
+      border-radius: 3px;
     }
     .left-navbar {
       display: flex;
@@ -330,13 +378,54 @@
       align-items: center;
       position: relative;
     }
+    .right-nav {
+      width: 40%;
+    }
 
+    h2 {
+      margin-left: 25px;
+    }
+    .container-genre-mobile {
+      height: 20vh;
+      display: flex;
+      background-color: rgba(15, 15, 15, 0.6);
+    }
     ul {
       display: flex;
       flex-direction: column;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      height: 100%;
+      width: 100%;
+
+      color: white;
     }
-    h2 {
-      margin-left: 25px;
+    .liste-genre {
+      visibility: hidden;
+    }
+    .menu-option-mobile {
+      width: 100%;
+      padding: 10px 5px;
+      color: inherit;
+      text-decoration: none;
+      list-style: none;
+      text-decoration: underline 0.15em rgba(255, 255, 255, 0);
+      transition: 300ms;
+      text-align: center;
+      border: 1px transparent solid;
+    }
+    .menu-option-mobile:hover {
+      background-color: rgba(15, 15, 15, 0.9);
+    }
+    .button-option {
+      width: 25px;
+    }
+    h1 {
+      font-size: 25px;
+    }
+    hr {
+      width: 30%;
     }
   }
 </style>

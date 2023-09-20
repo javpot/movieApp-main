@@ -72,8 +72,6 @@
     <div class="main-container">
         <div class="iframe-container">
             <iframe
-                width="560"
-                height="315"
                 src={`https://www.youtube.com/embed/${ytbKey}?autoplay=1&modestbranding=1`}
             />
         </div>
@@ -101,6 +99,8 @@
     iframe {
         border-radius: 8px;
         border: none;
+        width: 80vw;
+        height: 40vh;
     }
     body {
         background-color: black;
@@ -122,12 +122,14 @@
         display: flex;
         height: fit-content;
         background-color: #282828;
+        width: 100%;
     }
     .left-info {
-        width: 75vw;
+        width: 100%;
         display: flex;
         flex-direction: column;
         margin-left: 12px;
+        font-size: 1em;
     }
     .movie-image {
         width: 16rem;
